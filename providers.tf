@@ -9,9 +9,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket  = "myro-infra-tfstate"
-    key     = "static-site/terraform.tfstate"
-    region  = "us-east-1"
+    bucket = "myro-infra-tfstate"
+    key    = "static-site/terraform.tfstate"
+    region = "us-east-1"
   }
 }
 
