@@ -79,3 +79,10 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve tfplan
+
+      # Sync site files to S3 after apply (only on main)
+      - name: Sync site to S3
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          BUCKET=$(terraform output -raw s3_bucket_name)
+          aws s3 sync site/ s3://$BUCKET --delete
