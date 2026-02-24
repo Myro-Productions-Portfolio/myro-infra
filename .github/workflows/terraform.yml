@@ -86,3 +86,12 @@ jobs:
         run: |
           BUCKET=$(terraform output -raw s3_bucket_name)
           aws s3 sync site/ s3://$BUCKET --delete
+
+      # Invalidate CloudFront cache so updates are served immediately
+      - name: Invalidate CloudFront cache
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          DISTRIBUTION_ID=$(terraform output -raw cloudfront_distribution_id)
+          aws cloudfront create-invalidation \
+            --distribution-id $DISTRIBUTION_ID \
+            --paths "/*"
